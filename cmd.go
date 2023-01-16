@@ -85,6 +85,8 @@ func main() {
 	switch cmd {
 	case "json":
 		err = helper.ToJsons(src, output, options...)
+	case "es":
+		err = helper.ToES(src, output, options...)
 	case "memory":
 		err = helper.MemoryProfile(src, output, options...)
 	case "aof":
