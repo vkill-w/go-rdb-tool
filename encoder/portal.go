@@ -1,6 +1,6 @@
 package encoder
 
-import "github.com/hdt3213/rdb/core"
+import "github.com/vkill-w/go-rdb-tool/core"
 
 // Encoder is used to generate RDB file
 type Encoder = core.Encoder

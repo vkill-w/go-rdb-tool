@@ -2,7 +2,7 @@ package core
 
 import (
 	"bytes"
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/model"
 	"testing"
 )
 

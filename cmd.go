@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
-	"github.com/hdt3213/rdb/helper"
+	"github.com/vkill-w/go-rdb-tool/helper"
 	"os"
 	"strings"
 )

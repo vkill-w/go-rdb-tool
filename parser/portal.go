@@ -2,8 +2,8 @@
 package parser
 
 import (
-	"github.com/hdt3213/rdb/core"
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/core"
+	"github.com/vkill-w/go-rdb-tool/model"
 )
 
 const (

@@ -2,9 +2,9 @@ package main
 
 import (
 	"bufio"
-	"github.com/hdt3213/rdb/core"
-	"github.com/hdt3213/rdb/helper"
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/core"
+	"github.com/vkill-w/go-rdb-tool/helper"
+	"github.com/vkill-w/go-rdb-tool/model"
 	"net/http"
 	"os"
 	"path/filepath"

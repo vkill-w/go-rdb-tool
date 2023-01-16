@@ -1,7 +1,7 @@
 package helper
 
 import (
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/model"
 	"math/rand"
 	"sort"
 	"strconv"

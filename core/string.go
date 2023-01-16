@@ -4,7 +4,7 @@ import (
 	"encoding/binary"
 	"errors"
 	"fmt"
-	"github.com/hdt3213/rdb/lzf"
+	"github.com/vkill-w/go-rdb-tool/lzf"
 	"math"
 	"strconv"
 )

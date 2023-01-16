@@ -5,9 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"github.com/emirpasic/gods/sets/treeset"
-	"github.com/hdt3213/rdb/bytefmt"
-	"github.com/hdt3213/rdb/core"
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/bytefmt"
+	"github.com/vkill-w/go-rdb-tool/core"
+	"github.com/vkill-w/go-rdb-tool/model"
 	"os"
 	"strconv"
 )

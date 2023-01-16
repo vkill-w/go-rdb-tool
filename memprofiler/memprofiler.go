@@ -1,7 +1,7 @@
 package memprofiler
 
 import (
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/model"
 )
 
 // used to evaluate memory usage

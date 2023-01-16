@@ -3,7 +3,7 @@ package core
 import (
 	"encoding/binary"
 	"fmt"
-	"github.com/hdt3213/rdb/model"
+	"github.com/vkill-w/go-rdb-tool/model"
 	"math"
 	"sort"
 	"strconv"
