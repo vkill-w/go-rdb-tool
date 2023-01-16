@@ -1,4 +1,4 @@
-module github.com/hdt3213/rdb
+module github.com/vkill-w/go-rdb-tool
 
 go 1.16
 
@@ -8,4 +8,5 @@ require (
 	github.com/emirpasic/gods v1.18.1
 )
 
-replace github.com/hdt3213/rdb => github.com/vkill-w/go-rdb-tool v1.0
+
+
