@@ -1,15 +1,20 @@
 package helper
 
 import (
+	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/hdt3213/rdb/core"
-	"github.com/hdt3213/rdb/model"
-	"os"
 	jsonvalue "github.com/Andrew-M-C/go.jsonvalue"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esutil"
+	"github.com/hdt3213/rdb/bytefmt"
+	"github.com/hdt3213/rdb/core"
+	"github.com/hdt3213/rdb/model"
+	"log"
+	"os"
+	"time"
 )
 
 
@@ -58,7 +63,8 @@ func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
 		}
 	}
 	// parse rdb into es
-	index := "redis_rc_bop"
+	index := "redis_rdb_analyzer"
+	redisInstaceName := "a"
 	bi, err := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
 		Index:         index,            // The default index name
 		Client:        es,               // The Elasticsearch client
@@ -68,7 +74,7 @@ func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
 	})
 	err = dec.Parse(func(object model.RedisObject) bool {
 		//ES存储对象拼装
-		addDataToBulkIndexer(object, bi)
+		addDataToBulkIndexer(object, bi,redisInstaceName)
 		return true
 	})
 	if err := bi.Close(context.Background()); err != nil {
@@ -81,6 +87,50 @@ func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// add data to BulkIndexer
+func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redisInstaceName string) {
+	//format es data
+	newObject := jsonvalue.NewObject()
+	newObject.Set(object.GetDBIndex()).At("DBIndex")
+	newObject.Set(redisInstaceName).At("RedisInstaceName")
+	newObject.Set(object.GetKey()).At("Key")
+	newObject.Set(object.GetType()).At("Type")
+	newObject.Set(object.GetSize()).At("Size")
+	newObject.Set(bytefmt.FormatSize(uint64(object.GetSize()))).At("byte")
+	newObject.Set(object.GetElemCount()).At("ElemCount")
+	if object.GetExpiration() != nil {
+		newObject.Set(object.GetExpiration().Format("2006-01-02 15:04:05")).At("Expiration")
+	}
+
+	data, err := newObject.Marshal()
+
+	if err != nil {
+		log.Fatalf("Cannot encode  %d: %s", err)
+	}
+	// Add an item to the BulkIndexer
+	err = bi.Add(
+		context.Background(),
+		esutil.BulkIndexerItem{
+			// Action field configures the operation to perform (index, create, delete, update)
+			Action: "index",
+			// Body is an `io.Reader` with the payload
+			Body: bytes.NewReader(data),
+			// OnSuccess is called for each successful operation
+			OnSuccess: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem) {
+				fmt.Println("add success : ",object.GetKey())
+			},
+			// OnFailure is called for each failed operation
+			OnFailure: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem, err error) {
+				if err != nil {
+					log.Printf("ERROR: %s", err)
+				} else {
+					log.Printf("ERROR: %s: %s", res.Error.Type, res.Error.Reason)
+				}
+			},
+		},
+	)
 }
 
 // ToJsons read rdb file and convert to json file
