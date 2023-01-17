@@ -14,12 +14,12 @@ It provides abilities to:
 
 - Generate memory report for rdb file
 - Convert RDB files to JSON
+- Convert RDB files to ES
 - Convert RDB files to Redis Serialization Protocol (or AOF file)
 - Find the biggest N keys in RDB files
 - Draw FlameGraph to analysis which kind of keys occupied most memory
 - Customize data usage
 - Generate RDB file
-
 Support RDB version: 1 <= version <= 10(Redis 7.0)
 
 If you read Chinese, you could find a thorough introduction to the RDB file format here: [Golang 实现 Redis(11): RDB 文件格式](https://www.cnblogs.com/Finley/p/16251360.html)

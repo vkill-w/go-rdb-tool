@@ -49,6 +49,8 @@ func main() {
 	flagSet := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	var cmd string
 	var output string
+	var index string
+	var instace string
 	var n int
 	var port int
 	var seps separators
@@ -56,6 +58,8 @@ func main() {
 	var noExpired bool
 	flagSet.StringVar(&cmd, "c", "", "command for rdb: json")
 	flagSet.StringVar(&output, "o", "", "output file path")
+	flagSet.StringVar(&index, "ix", "", "es index name")
+	flagSet.StringVar(&instace, "is", "", "es instace name")
 	flagSet.IntVar(&n, "n", 0, "")
 	flagSet.IntVar(&port, "port", 0, "listen port for web")
 	flagSet.Var(&seps, "sep", "separator for flame graph")
@@ -86,7 +90,7 @@ func main() {
 	case "json":
 		err = helper.ToJsons(src, output, options...)
 	case "es":
-		err = helper.ToES(src, output, options...)
+		err = helper.ToES(src, output, index, instace, options...)
 	case "memory":
 		err = helper.MemoryProfile(src, output, options...)
 	case "aof":

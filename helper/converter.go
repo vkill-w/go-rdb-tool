@@ -17,10 +17,8 @@ import (
 	"time"
 )
 
-
-
 // ToES read rdb file and convert to elasticsearch
-func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
+func ToES(rdbFilename, esUrl, indexName, instaceName string, options ...interface{}) error {
 	if rdbFilename == "" {
 		return errors.New("src file path is required")
 	}
@@ -62,11 +60,9 @@ func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
 			return err
 		}
 	}
-	// parse rdb into es
-	index := "redis_rdb_analyzer"
-	redisInstaceName := "a"
+
 	bi, err := esutil.NewBulkIndexer(esutil.BulkIndexerConfig{
-		Index:         index,            // The default index name
+		Index:         indexName,        // The default index name
 		Client:        es,               // The Elasticsearch client
 		NumWorkers:    4,                // The number of worker goroutines
 		FlushBytes:    500000,           // The flush threshold in bytes
@@ -74,7 +70,7 @@ func ToES(rdbFilename string, esUrl string, options ...interface{}) error {
 	})
 	err = dec.Parse(func(object model.RedisObject) bool {
 		//ES存储对象拼装
-		addDataToBulkIndexer(object, bi,redisInstaceName)
+		addDataToBulkIndexer(object, bi, instaceName)
 		return true
 	})
 	if err := bi.Close(context.Background()); err != nil {
@@ -103,7 +99,6 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 	if object.GetExpiration() != nil {
 		newObject.Set(object.GetExpiration().Format("2006-01-02 15:04:05")).At("Expiration")
 	}
-
 	data, err := newObject.Marshal()
 
 	if err != nil {
@@ -119,7 +114,7 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 			Body: bytes.NewReader(data),
 			// OnSuccess is called for each successful operation
 			OnSuccess: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem) {
-				fmt.Println("add success : ",object.GetKey())
+				fmt.Println("add success : ", object.GetKey())
 			},
 			// OnFailure is called for each failed operation
 			OnFailure: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem, err error) {
