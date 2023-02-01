@@ -81,6 +81,17 @@ type BaseObject struct {
 	Extra      interface{} `json:"-"`                    // Extra stores more detail of encoding for memory profiler and other usages
 }
 
+type StructuredObject struct {
+	RedisInstaceName string `json:"RedisInstaceName"` // name of redis
+	Key              string `json:"Key"`
+	Type             string `json:"Type"`
+	Size             int    `json:"Size"`
+	Byte             string `json:"byte"`
+	ElemCount        int    `json:"ElemCount"`
+	Expiration       string `json:"Expiration"`
+	DBIndex          int    `json:"DBIndex"`
+}
+
 // GetKey returns key of object
 func (o *BaseObject) GetKey() string {
 	return o.Key

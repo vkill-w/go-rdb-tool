@@ -6,7 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	jsonvalue "github.com/Andrew-M-C/go.jsonvalue"
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/elastic/go-elasticsearch/v7/esutil"
 	"github.com/vkill-w/go-rdb-tool/bytefmt"
@@ -88,18 +87,28 @@ func ToES(rdbFilename, esUrl, indexName, instaceName string, options ...interfac
 // add data to BulkIndexer
 func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redisInstaceName string) {
 	//format es data
-	newObject := jsonvalue.NewObject()
-	newObject.Set(object.GetDBIndex()).At("DBIndex")
-	newObject.Set(redisInstaceName).At("RedisInstaceName")
-	newObject.Set(object.GetKey()).At("Key")
-	newObject.Set(object.GetType()).At("Type")
-	newObject.Set(object.GetSize()).At("Size")
-	newObject.Set(bytefmt.FormatSize(uint64(object.GetSize()))).At("byte")
-	newObject.Set(object.GetElemCount()).At("ElemCount")
+	expiration := "-1"
+	elemCount := 0
 	if object.GetExpiration() != nil {
-		newObject.Set(object.GetExpiration().Format("2006-01-02 15:04:05")).At("Expiration")
+		expiration = object.GetExpiration().Format("2006-01-02 15:04:05")
 	}
-	data, err := newObject.Marshal()
+	if object.GetType() == "string" {
+		elemCount = object.GetSize()
+	} else {
+		elemCount = object.GetElemCount()
+	}
+
+	structuredObject := model.StructuredObject{
+		DBIndex:          object.GetDBIndex(),
+		RedisInstaceName: redisInstaceName,
+		Key:              object.GetKey(),
+		Type:             object.GetType(),
+		Size:             object.GetSize(),
+		Byte:             bytefmt.FormatSize(uint64(object.GetSize())),
+		ElemCount:        elemCount,
+		Expiration:       expiration,
+	}
+	data, err := json.Marshal(structuredObject)
 
 	if err != nil {
 		log.Fatalf("Cannot encode  %d: %s", err)
