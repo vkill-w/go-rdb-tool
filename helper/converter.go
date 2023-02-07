@@ -73,14 +73,15 @@ func ToES(rdbFilename, esUrl, indexName, instaceName string, options ...interfac
 		return true
 	})
 	if err := bi.Close(context.Background()); err != nil {
-		log.Fatalf("Unexpected error: %s", err)
+		log.Printf("Unexpected error: %s", err)
 	}
+	bi.Stats()
 	biStats := bi.Stats()
 	biStatsJson, err := json.Marshal(biStats)
-	log.Fatalf("biStats NumAdded is %s", biStatsJson)
 	if err != nil {
 		return err
 	}
+	log.Printf("biStats NumAdded is %s \n", biStatsJson)
 	return nil
 }
 
