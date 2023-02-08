@@ -103,6 +103,7 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 		DBIndex:          object.GetDBIndex(),
 		RedisInstaceName: redisInstaceName,
 		Key:              object.GetKey(),
+		Keyword:          object.GetKey(),
 		Type:             object.GetType(),
 		Size:             object.GetSize(),
 		Byte:             bytefmt.FormatSize(uint64(object.GetSize())),
@@ -124,7 +125,7 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 			Body: bytes.NewReader(data),
 			// OnSuccess is called for each successful operation
 			OnSuccess: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem) {
-				fmt.Println("add success : ", object.GetKey())
+				log.Println("add success : ", object.GetKey())
 			},
 			// OnFailure is called for each failed operation
 			OnFailure: func(ctx context.Context, item esutil.BulkIndexerItem, res esutil.BulkIndexerResponseItem, err error) {
