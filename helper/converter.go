@@ -103,7 +103,7 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 		DBIndex:          object.GetDBIndex(),
 		RedisInstaceName: redisInstaceName,
 		Key:              object.GetKey(),
-		Keyword:          object.GetKey(),
+		Keywords:         object.GetKey(),
 		Type:             object.GetType(),
 		Size:             object.GetSize(),
 		Byte:             bytefmt.FormatSize(uint64(object.GetSize())),

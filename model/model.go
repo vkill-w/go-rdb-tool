@@ -84,7 +84,7 @@ type BaseObject struct {
 type StructuredObject struct {
 	RedisInstaceName string `json:"RedisInstaceName"` // name of redis
 	Key              string `json:"Key"`
-	Keyword          string `json:"Key.keyword"`
+	Keywords         string `json:"Keywords"`
 	Type             string `json:"Type"`
 	Size             int    `json:"Size"`
 	Byte             string `json:"byte"`
