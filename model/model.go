@@ -82,15 +82,16 @@ type BaseObject struct {
 }
 
 type StructuredObject struct {
-	RedisInstaceName string `json:"RedisInstaceName"` // name of redis
-	Key              string `json:"Key"`
-	Keywords         string `json:"Keywords"`
-	Type             string `json:"Type"`
-	Size             int    `json:"Size"`
-	Byte             string `json:"byte"`
-	ElemCount        int    `json:"ElemCount"`
-	Expiration       string `json:"Expiration"`
-	DBIndex          int    `json:"DBIndex"`
+	RedisInstaceName string     `json:"RedisInstaceName"` // name of redis
+	CreateDate       *time.Time `json:"CreateDate"`
+	Key              string     `json:"Key"`
+	KeyText          string     `json:"KeyText"`
+	Type             string     `json:"Type"`
+	Size             int        `json:"Size"`
+	Byte             string     `json:"byte"`
+	ElemCount        int        `json:"ElemCount"`
+	Expiration       *time.Time `json:"Expiration"`
+	DBIndex          int        `json:"DBIndex"`
 }
 
 // GetKey returns key of object

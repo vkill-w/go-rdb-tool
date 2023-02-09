@@ -67,9 +67,11 @@ func ToES(rdbFilename, esUrl, indexName, instaceName string, options ...interfac
 		FlushBytes:    500000,           // The flush threshold in bytes
 		FlushInterval: 30 * time.Second, // The periodic flush interval
 	})
+	createDate := time.Now()
+
 	err = dec.Parse(func(object model.RedisObject) bool {
 		//ES存储对象拼装
-		addDataToBulkIndexer(object, bi, instaceName)
+		addDataToBulkIndexer(object, bi, instaceName, &createDate)
 		return true
 	})
 	if err := bi.Close(context.Background()); err != nil {
@@ -86,12 +88,12 @@ func ToES(rdbFilename, esUrl, indexName, instaceName string, options ...interfac
 }
 
 // add data to BulkIndexer
-func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redisInstaceName string) {
+func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redisInstaceName string, createDate *time.Time) {
 	//format es data
-	expiration := "-1"
+	expiration := time.Date(1970, time.Month(1), 1, 0, 0, 0, 0, time.UTC)
 	elemCount := 0
 	if object.GetExpiration() != nil {
-		expiration = object.GetExpiration().Format("2006-01-02 15:04:05")
+		expiration = *object.GetExpiration()
 	}
 	if object.GetType() == "string" {
 		elemCount = object.GetSize()
@@ -102,13 +104,14 @@ func addDataToBulkIndexer(object model.RedisObject, bi esutil.BulkIndexer, redis
 	structuredObject := model.StructuredObject{
 		DBIndex:          object.GetDBIndex(),
 		RedisInstaceName: redisInstaceName,
+		CreateDate:       createDate,
 		Key:              object.GetKey(),
-		Keywords:         object.GetKey(),
+		KeyText:          object.GetKey(),
 		Type:             object.GetType(),
 		Size:             object.GetSize(),
 		Byte:             bytefmt.FormatSize(uint64(object.GetSize())),
 		ElemCount:        elemCount,
-		Expiration:       expiration,
+		Expiration:       &expiration,
 	}
 	data, err := json.Marshal(structuredObject)
 
