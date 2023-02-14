@@ -47,9 +47,6 @@ func (s *separators) Set(value string) error {
 
 func main() {
 
-	helper.ToES("/tmp/rdb/rdb-chemical-prod-eks-0001.rdb", "http://vm.vkill.cn:9200", "redis_rdb_analyer", "rdb-aipms-prod")
-	//helper.ToJsons("/tmp/rdb/rdb-chemical-prod-eks-0001.rdb","/tmp/rdb/chemical-prod-eks-0001.json")
-
 	flagSet := flag.NewFlagSet(os.Args[0], flag.ExitOnError)
 	var cmd string
 	var output string
